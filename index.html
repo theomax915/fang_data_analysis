@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Data Analysis Webpage</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <div class="headings">
+            <h1>FANG.COM BUSINESS DATA ANALYSIS</h1>
+            <h3> 郑又仁 2022080117 经21</h2>
+        </div>
+
+        <div Class="Text">
+            <p>In this project, I did web scraping, scraping data from Fang.com, and collecting data on second-hand houses in Haidian District in Beijing, China</p>
+            <p>Here are the key points that I collected:</p>
+        </div>
+        <div Class ='Code'>
+            <p>
+                import numpy as np<br>
+                import pandas as pd<br>
+                import matplotlib.pyplot as plt<br>
+                import seaborn as sns<br>
+                import matplotlib.font_manager as fm<br>
+                sns.set_style("darkgrid",{"font.sans-serif":['simhei', 'Arial']})<br>
+                df = pd.read_csv('house_data_fix.csv')<br>
+        </div>
+        <div Class="Number">
+            <h3>1. Price to Area</h3>
+        </div>
+        <div Class ='Code'>
+            <p>raw_price_clean = df[df['Price'] != '暂无报价']<br>
+                raw_price_clean['Area']=raw_price_clean['Area'].astype(float)<br>
+                raw_price_clean['Price']=raw_price_clean['Price'].astype(float)<br>
+                raw_price_clean['Price'].max()<br>
+                raw_price_clean['Price'].mean()<br>
+                plot1= sns.jointplot(x='Price',y='Area',data=raw_price_clean,kind='reg', joint_kws={'color':'Orange'})<br>
+                plot1.ax_marg_y.set_ylim(0, 1000)<br>
+                plot1.ax_marg_x.set_xlim(0, 15000)<br>
+            </p>
+        </div>
+        <div Class = 'Image'>
+            <img src="Price to Area.png" alt="Price to Area">
+        </div>
+        <div Class="Text">
+            <p>Based on the data above, it can be seen that as the area increases, the price also generally increases.
+                The average price of the houses in Haidian is <b>19.06 Million RMB</b>, and the most expensive house costs <b>450 Million RMB</b>
+                As the area of each house is different, in the following analyses, using the Price/m2 will be a fairer comparison.
+                Note that in the graph above, the limits of the x and y axis is set accordingly, as there are only a few data points outside this limit.
+            </p>
+        </div>
+        <div Class="Number">
+            <h3>2. Price to Furnishing</h3>
+        </div>
+        <div Class ='Code'>
+            <p>
+                price_clean = df[df['Price per m2'] != '暂无价格']<br>
+                price_clean['Price per m2'] = price_clean['Price per m2'].astype(float)<br>
+                sns.boxplot(x="Furnishing", y="Price per m2", data=price_clean,palette='rainbow')
+            </p>
+        </div>
+        <div Class = 'Image'>
+            <img src="Price to Furnishing.png" alt="Price to Furnishing">
+        </div>
+        <div Class="Text">
+            <p>
+                From the data above, it can be seen that a luxurious finishing <b>(豪华装修) </b>has the highest mean price per m2, and a semi-finished house <b>(毛坯)</b> has the lowest median price.
+                The lowest mean price is a middle-furnished house<b>(中装修) </b>.
+                This makes sense since the furniture such as beds, chairs and others are included in the price of the house, whereas a semi-finished house has no furnishings, and its construction may not be done.
+            </p>
+        </div>
+        <div Class="Number">
+            <h3>3. Price to Sun</h3>
+        </div>
+        <div Class ='Code'>
+            <p>
+                sns.boxplot(x="Sun Direction", y="Price per m2", data=price_clean,palette='rainbow')<br>
+            </p>
+        </div>
+        <div Class = 'Image'>
+            <img src="Price to Sun.png" alt="Price to Furnishing">
+        </div>
+        <div Class="Text">
+            <p>
+                From the data above, it is inferred that the houses facing <b>west</b> are the least expensive on average.
+                The houses facing <b>east</b> has the highest median value. This is because the sun rises in the east, meaning that east facing houses
+                have access to the sun.
+                The mode of the houses have both north and south facing windows, which also has the highest average.
+            </p>
+        </div>
+        <div Class="Number">
+            <h3>4. Price to Floor</h3>
+        </div>
+        <div Class ='Code'>
+            <p>
+                lift_clean = df[(df['Lift']== '有')|(df['Lift']=='无')]<br>
+                sns.countplot(x='Lift', data = lift_clean, palette = 'coolwarm')<br>
+                sns.countplot(x="Floor Level", hue="Lift",data=lift_clean, palette="Set2")<br>
+                sns.boxplot(x="Floor Level", y="Price per m2",data=price_clean,palette='rainbow')<br>
+                lift_price = price_clean[(price_clean['Lift']== '有')|(price_clean['Lift']=='无')]<br>
+                sns.boxplot(x="Floor Level", y="Price per m2", hue ='Lift',data=lift_price,palette='Paired')
+            </p>
+        </div>
+        <div Class = 'Image'>
+            <img src="Lift.png" alt="Price to Furnishing">
+            <img src="Lift to Floor.png" alt="Price to Furnishing">
+            <img src="Price to Floor Level.png" alt="Price to Furnishing">
+            <img src="price_floor_lift.png" alt="Price to Furnishing">
+        </div>
+        <div Class="Text">
+            <p>
+                It can be seen that in second-hand houses in Beijing, there are more houses without lift access than houses with lift access.
+                Additionally, all types of floor levels have more houses which have no lifts. Houses that have access to lifts are generally more expensive.
+                The most number of houses being sold is houses in the middle floors.
+                In the other hand, the least number of houses sold is the basement houses. This is because basement-level houses have no access to the sun.
+                Consequently, this makes the basement houses the cheapest, while the most expensive houses on average is the ones on the top floor (顶层). The most expensive median is low floors (低层)
+            </p>
+        </div>
+        <div Class="Number">
+            <h3>5. Conclusion</h3>
+        </div>
+        <div Class="Text">
+            <p>
+                1. The larger the house, the more expensive the price.<br>
+                2. Furnishing affects the price/m2 of a house as the more furnishings a house has, the more expensive it will get.<br>
+                3. Sun access also affects the price, where north-south facing windows and east facing windows are more favored.<br>
+                4. Floor level and lift access affects the price, as higher floors are more expensive than basement floors. Houses with lifts are also more expensive than those without.
+            </p>
+        </div>
+        <script src="" async defer></script>
+    </body>
+</html>
